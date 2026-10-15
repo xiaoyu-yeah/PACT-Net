@@ -4,8 +4,6 @@
 
 ![PACT-Net architecture](./PACT-Net.png)
 
-在线 Demo：暂未提供。
-
 ## Abstract
 
 Children with autism spectrum disorder (ASD) suffer emotional processing impairments, requiring objective EEG-based assessment for clinical intervention. However, large labeled ASD EEG datasets are hard to collect due to poor child compliance, and cross-group neurophysiological gaps degrade supervised model generalization. This work proposes the Prior-guided Adaptive Cross-domain Transfer Network (PACT-Net) for label-free ASD emotion recognition, transferring affective knowledge from typically developing (TD) children to autistic children. PACT-Net jointly optimizes three core modules: multiband differential entropy extracts frequency EEG cues; a prior-aware learnable graph models adaptive spatial brain connectivity; a local-to-global encoder captures transient temporal neural dynamics. An adversarial domain alignment module maps TD and ASD features into a shared latent space to reduce distribution discrepancy, with crossattention fusion boosting feature discriminability. In the TD-source ASD-target setup, our method reaches 92.53% accuracy and 92.50% F1-score on ASD test data, outperforming state-of-the-art methods by 9.51%. Without any ASD labels, PACT-Net attains comparable performance to supervised models trained on 50% ASD annotations.The results demonstrate that this spatiotemporal transfer framework holds significant potential as a robust and objective tool for clinical ASD emotion screening.The code is available at https://github.com/xiaoyu-yeah/PACT-Net.
