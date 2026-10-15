@@ -8,14 +8,12 @@ from torch_scatter import scatter_add
 
 
 def maybe_num_nodes(index, num_nodes=None):
-    """Return the requested node count or infer it from an edge index."""
     return index.max().item() + 1 if num_nodes is None else num_nodes
 
 
 def add_remaining_self_loops(
     edge_index, edge_weight=None, fill_value=1, num_nodes=None
 ):
-    """Add the identity contribution to every node's diagonal weight."""
     num_nodes = maybe_num_nodes(edge_index, num_nodes)
     row, col = edge_index
 
@@ -33,8 +31,6 @@ def add_remaining_self_loops(
             raise ValueError("edge_weight and edge_index must contain the same number of edges")
         existing_loop_weight = edge_weight[inv_mask]
         if existing_loop_weight.numel() > 0:
-            # The paper uses \tilde{W}=W+I, so an existing diagonal weight
-            # receives the identity contribution instead of being replaced.
             loop_weight[row[inv_mask]] = existing_loop_weight + fill_value
         edge_weight = torch.cat([edge_weight[mask], loop_weight], dim=0)
 
@@ -96,8 +92,6 @@ class GraphLearner(nn.Module):
 
     def __init__(self, node_dim, hidden_dim=64):
         super().__init__()
-        # The paper's graph-learner diagram and Eq. (3) use three linear
-        # projections with ReLU activations between them.
         self.mlp = nn.Sequential(
             nn.Linear(node_dim * 2, hidden_dim),
             nn.ReLU(),
@@ -108,7 +102,6 @@ class GraphLearner(nn.Module):
         )
 
     def forward(self, node_features):
-        # node_features: (batch, num_nodes, feature_dim)
         _, num_nodes, _ = node_features.shape
         source = node_features.unsqueeze(2).expand(-1, -1, num_nodes, -1)
         target = node_features.unsqueeze(1).expand(-1, num_nodes, -1, -1)
